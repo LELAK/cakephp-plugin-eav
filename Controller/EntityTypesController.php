@@ -1,4 +1,5 @@
 <?php
+
 App::uses('EavAppController', 'Eav.Controller');
 /**
  * Eav Entity Types Controller
@@ -18,99 +19,104 @@ App::uses('EavAppController', 'Eav.Controller');
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 /**
  * Entity Types Controller
  *
  * Methods to manage Entity Types. You need an entity type for each model/object.
  *
  * @package       plugins.Eav.Controller
-  */
+ */
 class EntityTypesController extends EavAppController {
 
+    public $uses = array('Eav.EavEntityType');
 
-/**
- * List the Entity Types
- *
- * @return void
- */
+    /**
+     * List the Entity Types
+     *
+     * @return void
+     */
     public function admin_index() {
-        $this->EntityType->recursive = 0;
+        $this->EavEntityType->recursive = 0;
         $this->set('entityTypes', $this->paginate());
     }
 
-/**
- * View a single Entity Type
- *
- * @param string $id
- * @return void
- */
+    /**
+     * View a single Entity Type
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_view($id = null) {
-        $this->EntityType->id = $id;
-        if (!$this->EntityType->exists()) {
-            throw new NotFoundException(__('Invalid entity type'));
+        $this->EavEntityType->id = $id;
+        if (!$this->EavEntityType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
         }
-        $this->set('entityType', $this->EntityType->read(null, $id));
+        $this->set('entityType', $this->EavEntityType->read(null, $id));
     }
 
-/**
- * Add a new Entity Type
- *
- * @return void
- */
+    /**
+     * Add a new Entity Type
+     *
+     * @return void
+     */
     public function admin_add() {
         if ($this->request->is('post')) {
-            $this->EntityType->create();
-            if ($this->EntityType->save($this->request->data)) {
-                $this->Session->setFlash(__('The entity type has been saved'));
+            $this->EavEntityType->create();
+            if ($this->EavEntityType->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav','Tipo de entidade salvo com sucesso'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The entity type could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav','O tipo de entidade não pode ser salvo. Tente novamente'));
             }
         }
+        $this->render('admin_form');
     }
 
-/**
- * Edit an Entity Type
- *
- * @param string $id
- * @return void
- */
+    /**
+     * Edit an Entity Type
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_edit($id = null) {
-        $this->EntityType->id = $id;
-        if (!$this->EntityType->exists()) {
-            throw new NotFoundException(__('Invalid entity type'));
+        $this->EavEntityType->id = $id;
+        if (!$this->EavEntityType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->EntityType->save($this->request->data)) {
-                $this->Session->setFlash(__('The entity type has been saved'));
+            if ($this->EavEntityType->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav','Tipo de entidade salvo com sucesso'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The entity type could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav','Tipo de entidade não pode ser salvo. Tente novamente'));
             }
         } else {
-            $this->request->data = $this->EntityType->read(null, $id);
+            $this->request->data = $this->EavEntityType->read(null, $id);
         }
+        $this->render('admin_form');
     }
 
-/**
- * admin_delete method
- *
- * @param string $id
- * @return void
- */
+    /**
+     * admin_delete method
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_delete($id = null) {
         if (!$this->request->is('post')) {
             throw new MethodNotAllowedException();
         }
-        $this->EntityType->id = $id;
-        if (!$this->EntityType->exists()) {
-            throw new NotFoundException(__('Invalid entity type'));
+        $this->EavEntityType->id = $id;
+        if (!$this->EavEntityType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
         }
-        if ($this->EntityType->delete()) {
-            $this->Session->setFlash(__('Entity type deleted'));
-            $this->redirect(array('action'=>'index'));
+        if ($this->EavEntityType->delete()) {
+            $this->Session->setFlash(__d('eav','Tipo de entidade deletado'));
+            $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('Entity type was not deleted'));
+        $this->Session->setFlash(__d('eav','Tipo de entidade não pode ser deletado. Tente novamente'));
         $this->redirect(array('action' => 'index'));
     }
+
 }

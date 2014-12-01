@@ -1,9 +1,10 @@
 <?php
+
 App::uses('EavAppModel', 'Eav.Model');
 /**
- * Eav Data Type Model
+ * Eav Entity Type Model
  *
- * This file is contains the DataType class
+ * This file is contains the EntityType class
  *
  * PHP 5
  *
@@ -18,31 +19,36 @@ App::uses('EavAppModel', 'Eav.Model');
  * @package       plugins.Eav.Model
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 /**
- * Data Type Model
+ * Entity Type Model
  *
- * Validations, Associations, and Methods for Data Types. Data Types map to the CakePHP data types.
+ * Validations, Associations, and Methods for Entity Types. You need an entity type for each model/object that
+ * uses the Eav Behavior
  *
  * @package       plugins.Eav.Model
  *
  */
-class DataType extends EavAppModel {
-/**
- * Display field
- *
- * @var string
- */
+class EavEntityType extends EavAppModel {
+
+    /**
+     * Display field
+     *
+     * @var string
+     */
     public $displayField = 'name';
-/**
- * Validation rules
- *
- * @var array
- */
+    public $useTable = 'eav_entity_types';
+
+    /**
+     * Validation rules
+     *
+     * @var array
+     */
     public $validate = array(
         'id' => array(
             'numeric' => array(
                 'rule' => array('numeric'),
-                'message' => 'The id should be an integer.',
+                'message' => 'O ID deve ser numérico',
                 'allowEmpty' => false,
                 'on' => 'create', // Limit validation to 'create' or 'update' operations
             ),
@@ -50,7 +56,7 @@ class DataType extends EavAppModel {
         'name' => array(
             'notempty' => array(
                 'rule' => array('notempty'),
-                'message' => 'Please enter the name of the Data Type',
+                'message' => 'Digite o nome do tipo de entidade',
                 'allowEmpty' => false,
                 'required' => false,
             ),
@@ -59,15 +65,15 @@ class DataType extends EavAppModel {
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 
-/**
- * hasMany associations
- *
- * @var array
- */
+    /**
+     * hasMany associations
+     *
+     * @var array
+     */
     public $hasMany = array(
-        'Eav.Attribute' => array(
-            'className' => 'Attribute',
-            'foreignKey' => 'data_type_id',
+        'Attribute' => array(
+            'className' => 'Eav.EavAttribute',
+            'foreignKey' => 'entity_type_id',
             'dependent' => false,
         )
     );

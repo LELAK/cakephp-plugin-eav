@@ -1,4 +1,4 @@
-# CakePHP EAV Plugin
+# CakePHP EAV Plugin for Croogo
 
 The EAV Plugin is based on the EAV Behavior which contains logic to implement the Entity, Attribute, Value design pattern in CakePHP.
 
@@ -28,8 +28,8 @@ Values are the are the field values stored for each Entity.
 
 ## Installation
 * Clone/Copy the files in this directory into `app/Plugin/Eav`
-* Ensure the plugin is loaded in `app/Config/bootstrap.php` by calling `CakePlugin::load('Eav');`
-* Add the SQL to your database to add the plugin tables tables by running the sql script in `app/Config/Schema`.
+* Ensure the plugin is loaded in Croogo
+* Migrate the Plugin
 * Attach the Eav Behavior to your Models. The behavior can be configured itself or when added to a model. `public $actsAs = array('Eav.Eav' => array('type' =>'entity'));`
 * Navigate to domain.com/admin/eav/entity_types and add Entity Types for each model you intend to attach the EAV Behavior too. The name of the Entity Type should be the name of the model. (ex. User, Contact, Customer)
 * Navigate to domain.com/admin/eav/attributes and add some attributes. You will need to associate the Attribute with an Entity and Data Type.

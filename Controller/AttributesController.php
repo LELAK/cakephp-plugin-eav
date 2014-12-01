@@ -1,4 +1,5 @@
 <?php
+
 App::uses('EavAppController', 'Eav.Controller');
 /**
  * Eav Attributes Controller
@@ -18,105 +19,123 @@ App::uses('EavAppController', 'Eav.Controller');
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 /**
  * Attributes Controller
  *
  * Methods to manage Attributes. Attributes are the dynamic fields added to an Entity
  *
  * @package       plugins.Eav.Controller
-  */
+ */
 class AttributesController extends EavAppController {
 
+    public $uses = array('Eav.EavAttribute');
 
-/**
- * List the attributes
- *
- * @return void
- */
+    public function beforeFilter() {
+
+        $this->input_types = json_decode(CakeSession::read("EAV.inputTypes"), TRUE);
+
+        parent::beforeFilter();
+    }
+
+    /**
+     * List the attributes
+     *
+     * @return void
+     */
     public function admin_index() {
-        $this->Attribute->recursive = 0;
+        $this->EavAttribute->recursive = 0;
         $this->set('attributes', $this->paginate());
     }
 
-/**
- * View an Attribute
- *
- * @param string $id
- * @return void
- */
+    /**
+     * View an Attribute
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_view($id = null) {
-        $this->Attribute->id = $id;
-        if (!$this->Attribute->exists()) {
-            throw new NotFoundException(__('Invalid attribute'));
+        $this->EavAttribute->id = $id;
+        if (!$this->EavAttribute->exists()) {
+            throw new NotFoundException(__d('eav', 'Atributo inválido'));
         }
-        $this->set('attribute', $this->Attribute->read(null, $id));
+        $this->set('attribute', $this->EavAttribute->read(null, $id));
     }
 
-/**
- * Add a new Attribute
- *
- * @return void
- */
+    /**
+     * Add a new Attribute
+     *
+     * @return void
+     */
     public function admin_add() {
         if ($this->request->is('post')) {
-            $this->Attribute->create();
-            if ($this->Attribute->save($this->request->data)) {
-                $this->Session->setFlash(__('The attribute has been saved'));
+            $this->EavAttribute->create();
+            if ($this->EavAttribute->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav', 'Atributo salvo'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The attribute could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav', 'O atributo não pode ser salvo, tente novamente'));
             }
         }
-        $entityTypes = $this->Attribute->EntityType->find('list');
-        $dataTypes = $this->Attribute->DataType->find('list');
-        $this->set(compact('entityTypes', 'dataTypes', 'userTypes'));
+
+        $inputTypes = $this->input_types;
+        $entityTypes = $this->EavAttribute->EavEntityType->find('list');
+        $dataTypes = $this->EavAttribute->EavDataType->find('list');
+        $this->set(compact('entityTypes', 'dataTypes', 'inputTypes'));
+
+        $this->render('admin_form');
     }
 
-/**
- * Edit an Attribute
- *
- * @param string $id
- * @return void
- */
+    /**
+     * Edit an Attribute
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_edit($id = null) {
-        $this->Attribute->id = $id;
-        if (!$this->Attribute->exists()) {
-            throw new NotFoundException(__('Invalid attribute'));
+        $this->EavAttribute->id = $id;
+        if (!$this->EavAttribute->exists()) {
+            throw new NotFoundException(__d('eav', 'Atributo inválido'));
         }
         if ($this->request->isPost() || $this->request->isPut()) {
-            if ($this->Attribute->save($this->request->data)) {
-                $this->Session->setFlash(__('The attribute has been saved'));
+            if ($this->EavAttribute->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav', 'O atributo foi salvo'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The attribute could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav', 'O atributo não pode ser salvo, tente novamente'));
             }
         } else {
-            $this->request->data = $this->Attribute->read(null, $id);
+            $this->request->data = $this->EavAttribute->read(null, $id);
         }
-        $entityTypes = $this->Attribute->EntityType->find('list');
-        $dataTypes = $this->Attribute->DataType->find('list');
-        $this->set(compact('entityTypes', 'dataTypes', 'userTypes'));
+
+        $inputTypes = $this->input_types;
+        $entityTypes = $this->EavAttribute->EavEntityType->find('list');
+        $dataTypes = $this->EavAttribute->EavDataType->find('list');
+        $this->set(compact('entityTypes', 'dataTypes', 'inputTypes'));
+
+        $this->render('admin_form');
     }
 
-/**
- * Delete an attribute
- *
- * @param string $id
- * @return void
- */
+    /**
+     * Delete an attribute
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_delete($id = null) {
         if (!$this->request->is('post')) {
             throw new MethodNotAllowedException();
         }
-        $this->Attribute->id = $id;
-        if (!$this->Attribute->exists()) {
-            throw new NotFoundException(__('Invalid attribute'));
+        $this->EavAttribute->id = $id;
+        if (!$this->EavAttribute->exists()) {
+            throw new NotFoundException(__d('eav', 'Atributo inválido'));
         }
-        if ($this->Attribute->delete()) {
-            $this->Session->setFlash(__('Attribute deleted'));
-            $this->redirect(array('action'=>'index'));
+        if ($this->EavAttribute->delete()) {
+            $this->Session->setFlash(__d('eav', 'Atributo excluído'));
+            $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('Attribute was not deleted'));
+        $this->Session->setFlash(__d('eav', 'O atributo não pode ser excluído. Tente novamente'));
         $this->redirect(array('action' => 'index'));
     }
+
 }

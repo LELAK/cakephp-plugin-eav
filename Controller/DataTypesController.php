@@ -1,4 +1,5 @@
 <?php
+
 App::uses('EavAppController', 'Eav.Controller');
 /**
  * Eav Attributes Controller
@@ -18,6 +19,7 @@ App::uses('EavAppController', 'Eav.Controller');
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
+
 /**
  * Data Types Controller
  *
@@ -25,93 +27,99 @@ App::uses('EavAppController', 'Eav.Controller');
  *
  * @package       plugins.Eav.Controller
  *
-  */
+ */
 class DataTypesController extends EavAppController {
 
+    public $uses = array('Eav.EavDataType');
 
-/**
- * View a list of Data Types
- *
- * @return void
- */
+    /**
+     * View a list of Data Types
+     *
+     * @return void
+     */
     public function admin_index() {
-        $this->DataType->recursive = 0;
+        $this->EavDataType->recursive = 0;
         $this->set('dataTypes', $this->paginate());
     }
 
-/**
- * View a single Data Type
- *
- * @param string $id
- * @return void
- */
+    /**
+     * View a single Data Type
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_view($id = null) {
-        $this->DataType->id = $id;
-        if (!$this->DataType->exists()) {
-            throw new NotFoundException(__('Invalid data type'));
+        $this->EavDataType->id = $id;
+        if (!$this->EavDataType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
         }
-        $this->set('dataType', $this->DataType->read(null, $id));
+        $this->set('dataType', $this->EavDataType->read(null, $id));
     }
 
-/**
- * Add a New Data Type
- *
- * @return void
- */
+    /**
+     * Add a New Data Type
+     *
+     * @return void
+     */
     public function admin_add() {
         if ($this->request->is('post')) {
-            $this->DataType->create();
-            if ($this->DataType->save($this->request->data)) {
-                $this->Session->setFlash(__('The data type has been saved'));
+            $this->EavDataType->create();
+            if ($this->EavDataType->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav','O tipo de dado foi salvo'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The data type could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav','O tipo de dado não pode ser salvo. Tente novamente'));
             }
         }
+        
+        $this->render('admin_form');
     }
 
-/**
- * Edit a Data Type
- *
- * @param string $id
- * @return void
- */
+    /**
+     * Edit a Data Type
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_edit($id = null) {
-        $this->DataType->id = $id;
-        if (!$this->DataType->exists()) {
-            throw new NotFoundException(__('Invalid data type'));
+        $this->EavDataType->id = $id;
+        if (!$this->EavDataType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
-            if ($this->DataType->save($this->request->data)) {
-                $this->Session->setFlash(__('The data type has been saved'));
+            if ($this->EavDataType->save($this->request->data)) {
+                $this->Session->setFlash(__d('eav','O tipo de dado foi salvo'));
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__('The data type could not be saved. Please, try again.'));
+                $this->Session->setFlash(__d('eav','O tipo de dado não pode ser salvo. Tente novamente'));
             }
         } else {
-            $this->request->data = $this->DataType->read(null, $id);
+            $this->request->data = $this->EavDataType->read(null, $id);
         }
+        
+        $this->render('admin_form');
     }
 
-/**
- * Delete a Data Type
- *
- * @param string $id
- * @return void
- */
+    /**
+     * Delete a Data Type
+     *
+     * @param string $id
+     * @return void
+     */
     public function admin_delete($id = null) {
         if (!$this->request->is('post')) {
             throw new MethodNotAllowedException();
         }
-        $this->DataType->id = $id;
-        if (!$this->DataType->exists()) {
-            throw new NotFoundException(__('Invalid data type'));
+        $this->EavDataType->id = $id;
+        if (!$this->EavDataType->exists()) {
+            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
         }
-        if ($this->DataType->delete()) {
-            $this->Session->setFlash(__('Data type deleted'));
-            $this->redirect(array('action'=>'index'));
+        if ($this->EavDataType->delete()) {
+            $this->Session->setFlash(__d('eav','Tipo de dado excluído'));
+            $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__('Data type was not deleted'));
+        $this->Session->setFlash(__d('eav','Tipo de dado não pode ser deletado. Tente novamente'));
         $this->redirect(array('action' => 'index'));
     }
+
 }

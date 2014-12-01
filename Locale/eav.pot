@@ -1,0 +1,373 @@
+# LANGUAGE translation of CakePHP Application
+# Copyright YEAR NAME <EMAIL@ADDRESS>
+#
+#, fuzzy
+msgid ""
+msgstr ""
+"Project-Id-Version: PROJECT VERSION\n"
+"POT-Creation-Date: 2014-12-01 11:31+0000\n"
+"PO-Revision-Date: YYYY-mm-DD HH:MM+ZZZZ\n"
+"Last-Translator: NAME <EMAIL@ADDRESS>\n"
+"Language-Team: LANGUAGE <EMAIL@ADDRESS>\n"
+"MIME-Version: 1.0\n"
+"Content-Type: text/plain; charset=utf-8\n"
+"Content-Transfer-Encoding: 8bit\n"
+"Plural-Forms: nplurals=INTEGER; plural=EXPRESSION;\n"
+
+#: Config/bootstrap.php:18
+msgid "Atributos"
+msgstr ""
+
+#: Config/bootstrap.php:27
+msgid "Tipos de Entidade"
+msgstr ""
+
+#: Config/bootstrap.php:36
+msgid "Tipos de Dados"
+msgstr ""
+
+#: Config/bootstrap.php:50
+msgid "Texto simples"
+msgstr ""
+
+#: Config/bootstrap.php:51
+msgid "Texto longo"
+msgstr ""
+
+#: Config/bootstrap.php:52
+msgid "Numérico"
+msgstr ""
+
+#: Config/bootstrap.php:53
+msgid "Calendário"
+msgstr ""
+
+#: Config/bootstrap.php:54
+msgid "Lista selecionável"
+msgstr ""
+
+#: Config/bootstrap.php:55
+msgid "Checkbox"
+msgstr ""
+
+#: Controller/AttributesController.php:60;98;131
+msgid "Atributo inválido"
+msgstr ""
+
+#: Controller/AttributesController.php:74
+msgid "Atributo salvo"
+msgstr ""
+
+#: Controller/AttributesController.php:77;105
+msgid "O atributo não pode ser salvo, tente novamente"
+msgstr ""
+
+#: Controller/AttributesController.php:102
+msgid "O atributo foi salvo"
+msgstr ""
+
+#: Controller/AttributesController.php:134
+msgid "Atributo excluído"
+msgstr ""
+
+#: Controller/AttributesController.php:137
+msgid "O atributo não pode ser excluído. Tente novamente"
+msgstr ""
+
+#: Controller/DataTypesController.php:54;87;115
+msgid "Tipo de dado inválido"
+msgstr ""
+
+#: Controller/DataTypesController.php:68;91
+msgid "O tipo de dado foi salvo"
+msgstr ""
+
+#: Controller/DataTypesController.php:71;94
+msgid "O tipo de dado não pode ser salvo. Tente novamente"
+msgstr ""
+
+#: Controller/DataTypesController.php:118
+msgid "Tipo de dado excluído"
+msgstr ""
+
+#: Controller/DataTypesController.php:121
+msgid "Tipo de dado não pode ser deletado. Tente novamente"
+msgstr ""
+
+#: Controller/EntityTypesController.php:53;85;112
+msgid "Tipo de entidade inválido"
+msgstr ""
+
+#: Controller/EntityTypesController.php:67;89
+msgid "Tipo de entidade salvo com sucesso"
+msgstr ""
+
+#: Controller/EntityTypesController.php:70
+msgid "O tipo de entidade não pode ser salvo. Tente novamente"
+msgstr ""
+
+#: Controller/EntityTypesController.php:92
+msgid "Tipo de entidade não pode ser salvo. Tente novamente"
+msgstr ""
+
+#: Controller/EntityTypesController.php:115
+msgid "Tipo de entidade deletado"
+msgstr ""
+
+#: Controller/EntityTypesController.php:118
+msgid "Tipo de entidade não pode ser deletado. Tente novamente"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:10;16;25
+#: View/Attributes/admin_view.ctp:2
+msgid "Atributo"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:17
+#: View/DataTypes/admin_form.ctp:17
+#: View/EntityTypes/admin_form.ctp:17
+msgid "Criar"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:38
+#: View/Attributes/admin_index.ctp:24
+#: View/DataTypes/admin_form.ctp:37
+#: View/DataTypes/admin_index.ctp:24
+#: View/DataTypes/admin_view.ctp:43
+#: View/EntityTypes/admin_form.ctp:37
+#: View/EntityTypes/admin_index.ctp:24
+#: View/EntityTypes/admin_view.ctp:43
+msgid "Título"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:41
+#: View/Attributes/admin_index.ctp:25
+#: View/Attributes/admin_view.ctp:14
+#: View/DataTypes/admin_view.ctp:44
+#: View/EntityTypes/admin_view.ctp:44
+msgid "Atalho"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:45
+#: View/Attributes/admin_view.ctp:19
+#: View/DataTypes/admin_view.ctp:45
+#: View/EntityTypes/admin_view.ctp:45
+msgid "Descrição"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:48
+#: View/EntityTypes/admin_view.ctp:2
+msgid "Tipo de Entidade"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:51
+msgid "Tipo de input (apenas para visualização)"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:54
+#: View/DataTypes/admin_form.ctp:10;16;25
+#: View/EntityTypes/admin_form.ctp:10;16;25
+msgid "Tipo de Dado"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:57
+msgid "Múltiplo"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:58
+msgid "Opcional"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:59
+msgid "Público"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:68
+#: View/DataTypes/admin_form.ctp:46
+#: View/EntityTypes/admin_form.ctp:46
+msgid "Publicação"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:69
+#: View/DataTypes/admin_form.ctp:47
+#: View/EntityTypes/admin_form.ctp:47
+msgid "Aplicar"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:70
+#: View/DataTypes/admin_form.ctp:48
+#: View/EntityTypes/admin_form.ctp:48
+msgid "Salvar"
+msgstr ""
+
+#: View/Attributes/admin_form.ctp:72
+#: View/DataTypes/admin_form.ctp:50
+#: View/EntityTypes/admin_form.ctp:50
+msgid "Cancelar"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:11
+msgid "Cadastrar Atributo"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:23
+#: View/Attributes/admin_view.ctp:4
+#: View/DataTypes/admin_index.ctp:23
+#: View/DataTypes/admin_view.ctp:4;42
+#: View/EntityTypes/admin_index.ctp:23
+#: View/EntityTypes/admin_view.ctp:4;42
+msgid "Id"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:26
+#: View/Attributes/admin_view.ctp:47
+#: View/DataTypes/admin_index.ctp:25
+#: View/DataTypes/admin_view.ctp:27;50
+#: View/EntityTypes/admin_index.ctp:25
+#: View/EntityTypes/admin_view.ctp:27;50
+msgid "Ações"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:37
+#: View/DataTypes/admin_index.ctp:36
+#: View/EntityTypes/admin_index.ctp:36
+msgid "Editar este ítem"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:38
+#: View/DataTypes/admin_index.ctp:37
+#: View/EntityTypes/admin_index.ctp:37
+msgid "Remover este ítem"
+msgstr ""
+
+#: View/Attributes/admin_index.ctp:38
+#: View/DataTypes/admin_index.ctp:37
+#: View/EntityTypes/admin_index.ctp:37
+msgid "Você tem certeza?"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:9
+#: View/DataTypes/admin_view.ctp:9
+#: View/EntityTypes/admin_view.ctp:9
+msgid "Nome"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:24
+#: View/DataTypes/admin_view.ctp:46
+#: View/EntityTypes/admin_view.ctp:46
+msgid "Tipo de entidade"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:29
+#: View/DataTypes/admin_view.ctp:2;47
+#: View/EntityTypes/admin_view.ctp:47
+msgid "Tipo de dado"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:34
+#: View/DataTypes/admin_view.ctp:14;48
+#: View/EntityTypes/admin_view.ctp:14;48
+msgid "Criado"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:39
+#: View/DataTypes/admin_view.ctp:19;49
+#: View/EntityTypes/admin_view.ctp:19;49
+msgid "Modificado"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:49
+msgid "Editar atributo"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:50
+msgid "Deletar atributo"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:50
+#: View/DataTypes/admin_view.ctp:30;68
+#: View/EntityTypes/admin_view.ctp:30;68
+msgid "Tem certeza que deseja excluír \"%s\"?"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:51
+#: View/DataTypes/admin_view.ctp:33
+#: View/EntityTypes/admin_view.ctp:33
+msgid "Listar atributos"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:52
+#: View/DataTypes/admin_view.ctp:34
+#: View/EntityTypes/admin_view.ctp:34
+msgid "Novo atributo"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:53
+#: View/EntityTypes/admin_view.ctp:31
+msgid "Listar tipos de entidade"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:54
+#: View/EntityTypes/admin_view.ctp:32
+msgid "Novo tipo de entidade"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:55
+#: View/DataTypes/admin_view.ctp:31
+msgid "Listar tipos de dado"
+msgstr ""
+
+#: View/Attributes/admin_view.ctp:56
+#: View/DataTypes/admin_view.ctp:32
+msgid "Novo tipo de dado"
+msgstr ""
+
+#: View/DataTypes/admin_index.ctp:11
+msgid "Cadastrar Tipo de Dado"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:29
+msgid "Editar tipo de dado"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:30
+msgid "Deletar tipo de dado"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:38
+#: View/EntityTypes/admin_view.ctp:38
+msgid "Atributos relacionados"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:66
+#: View/EntityTypes/admin_view.ctp:66
+msgid "Visualizar"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:67
+#: View/EntityTypes/admin_view.ctp:67
+msgid "Editar"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:68
+#: View/EntityTypes/admin_view.ctp:68
+msgid "Deletar"
+msgstr ""
+
+#: View/DataTypes/admin_view.ctp:77
+#: View/EntityTypes/admin_view.ctp:77
+msgid "Novo Atributo"
+msgstr ""
+
+#: View/EntityTypes/admin_index.ctp:11
+msgid "Cadastrar Tipo de Entidade"
+msgstr ""
+
+#: View/EntityTypes/admin_view.ctp:29
+msgid "Editar tipo de entidade"
+msgstr ""
+
+#: View/EntityTypes/admin_view.ctp:30
+msgid "Deletar tipo de entidade"
+msgstr ""
+

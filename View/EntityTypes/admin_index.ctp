@@ -1,49 +1,51 @@
-<div class="entityTypes index">
-	<h2><?php echo __('Entity Types');?></h2>
-	<table cellpadding="0" cellspacing="0">
-	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
-			<th><?php echo $this->Paginator->sort('name');?></th>
-			<th><?php echo $this->Paginator->sort('created');?></th>
-			<th><?php echo $this->Paginator->sort('modified');?></th>
-			<th class="actions"><?php echo __('Actions');?></th>
-	</tr>
-	<?php
-	$i = 0;
-	foreach ($entityTypes as $entityType): ?>
-	<tr>
-		<td><?php echo h($entityType['EntityType']['id']); ?>&nbsp;</td>
-		<td><?php echo h($entityType['EntityType']['name']); ?>&nbsp;</td>
-		<td><?php echo h($entityType['EntityType']['created']); ?>&nbsp;</td>
-		<td><?php echo h($entityType['EntityType']['modified']); ?>&nbsp;</td>
-		<td class="actions">
-			<?php echo $this->Html->link(__('View'), array('action' => 'view', $entityType['EntityType']['id'])); ?>
-			<?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $entityType['EntityType']['id'])); ?>
-			<?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $entityType['EntityType']['id']), null, __('Are you sure you want to delete # %s?', $entityType['EntityType']['id'])); ?>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</table>
-	<p>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</p>
+<?php
 
-	<div class="paging">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'prev disabled'));
-		echo $this->Paginator->numbers(array('separator' => ''));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next disabled'));
-	?>
-	</div>
-</div>
-<div class="actions">
-	<h3><?php echo __('Actions'); ?></h3>
-	<ul>
-		<li><?php echo $this->Html->link(__('New Entity Type'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Attributes'), array('controller' => 'attributes', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Attribute'), array('controller' => 'attributes', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+$this->extend('/Common/admin_index');
+
+$this->Html
+        ->addCrumb('', '/admin', array('icon' => 'home'))
+        ->addCrumb("Tipo de Entidade", array('admin' => true, 'plugin' => 'eav', 'controller' => 'entity_types', 'action' => 'index'));
+
+$this->append('actions');
+echo $this->Croogo->adminAction(
+        __d('eav', 'Cadastrar Tipo de Entidade'), array('action' => 'add')
+);
+$this->end();
+
+if (isset($this->request->params['named'])) {
+    foreach ($this->request->params['named'] as $nn => $nv) {
+        $this->Paginator->options['url'][] = $nn . ':' . $nv;
+    }
+}
+$this->start('table-heading');
+$tableHeaders = $this->Html->tableHeaders(array(
+    '',
+    __d('eav', 'Id'),
+    __d('eav', 'Título'),
+    __d('eav', 'Ações'),
+        ));
+echo $this->Html->tag('thead', $tableHeaders);
+$this->end();
+
+$this->append('table-body');
+$rows = array();
+
+foreach ($entityTypes as $entityType):
+    $actions = array();
+    $actions[] = $this->Croogo->adminRowActions($entityType['EavEntityType']['id']);
+    $actions[] = $this->Croogo->adminRowAction('', array('action' => 'edit', $entityType['EavEntityType']['id']), array('icon' => 'pencil', 'tooltip' => __d('eav', 'Editar este ítem')));
+    $actions[] = $this->Croogo->adminRowAction('', array('action' => 'delete', $entityType['EavEntityType']['id']), array('icon' => 'trash', 'tooltip' => __d('eav', 'Remover este ítem')), __d('eav', 'Você tem certeza?'));
+    $actions = $this->Html->div('item-actions', implode(' ', $actions));
+
+    // Title Column
+    $titleCol = $entityType['EavEntityType']['name'];
+
+    $rows[] = array(
+        '',
+        $entityType['EavEntityType']['id'],
+        $titleCol,
+        $actions,
+    );
+endforeach;
+echo $this->Html->tableCells($rows);
+$this->end();

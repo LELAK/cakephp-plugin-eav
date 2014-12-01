@@ -1,64 +1,53 @@
-<div class="attributes index">
-	<h2><?php echo __('Attributes');?></h2>
-	<table class="table table-striped">
-	<tr>
-			<th><?php echo $this->Paginator->sort('id');?></th>
-			<th><?php echo $this->Paginator->sort('name');?></th>
-			<th><?php echo $this->Paginator->sort('description');?></th>
-			<th><?php echo $this->Paginator->sort('entity_type_id');?></th>
-			<th><?php echo $this->Paginator->sort('data_type_id');?></th>
-			<th class="actions"><?php echo __('Actions');?></th>
-	</tr>
-	<?php
-	$i = 0;
-	foreach ($attributes as $attribute): ?>
-	<tr>
-		<td><?php echo h($attribute['Attribute']['id']); ?>&nbsp;</td>
-		<td><?php echo h($attribute['Attribute']['name']); ?>&nbsp;</td>
-		<td><?php echo h($attribute['Attribute']['description']); ?>&nbsp;</td>
-		<td>
-			<?php echo $this->Html->link($attribute['EntityType']['name'], array('controller' => 'entity_types', 'action' => 'view', $attribute['EntityType']['id'])); ?>
-		</td>
-		<td>
-			<?php echo $this->Html->link($attribute['DataType']['name'], array('controller' => 'data_types', 'action' => 'view', $attribute['DataType']['id'])); ?>
-		</td>
-		<td class="actions">
-		  <div class="btn-group">
-		  <button class="btn dropdown-toggle" data-toggle="dropdown"><?php echo __('Actions'); ?><span class="caret"></span></button>
-		  <ul class="dropdown-menu">
-			<li><?php echo $this->Html->link(__('View'), array('action' => 'view', $attribute['Attribute']['id'])); ?></li>
-			<li><?php echo $this->Html->link(__('Edit'), array('action' => 'edit', $attribute['Attribute']['id'])); ?></li>
-			<li><?php echo $this->Form->postLink(__('Delete'), array('action' => 'delete', $attribute['Attribute']['id']), null, __('Are you sure you want to delete # %s?', $attribute['Attribute']['id'])); ?></li>
-		  </ul>
-		  </div>
-		</td>
-	</tr>
-<?php endforeach; ?>
-	</table>
-	<ul>
-	<?php
-	echo $this->Paginator->counter(array(
-	'format' => __('Page {:page} of {:pages}, showing {:current} records out of {:count} total, starting on record {:start}, ending on {:end}')
-	));
-	?>	</ul>
+<?php
 
-	<ul class="pager">
-	<?php
-		echo $this->Paginator->prev('< ' . __('previous'), array(), null, array('class' => 'previous', 'tag'=>'li'));
-		echo $this->Paginator->numbers(array('separator' => '', 'tag'=>'li'));
-		echo $this->Paginator->next(__('next') . ' >', array(), null, array('class' => 'next', 'tag'=>'li'));
-	?>
-	</ul>
-</div>
-<div class="btn-group">
-	<button class="btn dropdown-toggle" data-toggle="dropdown"><?php echo __('Actions'); ?><span class="caret"></span></button>
-	<ul class="dropdown-menu">
-		<li><?php echo $this->Html->link(__('New Attribute'), array('action' => 'add')); ?></li>
-		<li><?php echo $this->Html->link(__('List Entity Types'), array('controller' => 'entity_types', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Entity Type'), array('controller' => 'entity_types', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List Data Types'), array('controller' => 'data_types', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New Data Type'), array('controller' => 'data_types', 'action' => 'add')); ?> </li>
-		<li><?php echo $this->Html->link(__('List User Types'), array('controller' => 'user_types', 'action' => 'index')); ?> </li>
-		<li><?php echo $this->Html->link(__('New User Type'), array('controller' => 'user_types', 'action' => 'add')); ?> </li>
-	</ul>
-</div>
+$this->extend('/Common/admin_index');
+
+$this->Html
+        ->addCrumb('', '/admin', array('icon' => 'home'))
+        ->addCrumb("Atributo", array('admin' => true, 'plugin' => 'eav', 'controller' => 'attributes', 'action' => 'index'));
+
+$this->append('actions');
+echo $this->Croogo->adminAction(
+        __d('eav', 'Cadastrar Atributo'), array('action' => 'add')
+);
+$this->end();
+
+if (isset($this->request->params['named'])) {
+    foreach ($this->request->params['named'] as $nn => $nv) {
+        $this->Paginator->options['url'][] = $nn . ':' . $nv;
+    }
+}
+$this->start('table-heading');
+$tableHeaders = $this->Html->tableHeaders(array(
+    '',
+    __d('eav', 'Id'),
+    __d('eav', 'Título'),
+    __d('eav', 'Atalho'),
+    __d('eav', 'Ações'),
+        ));
+echo $this->Html->tag('thead', $tableHeaders);
+$this->end();
+
+$this->append('table-body');
+$rows = array();
+
+foreach ($attributes as $attribute):
+    $actions = array();
+    $actions[] = $this->Croogo->adminRowActions($attribute['EavAttribute']['id']);
+    $actions[] = $this->Croogo->adminRowAction('', array('action' => 'edit', $attribute['EavAttribute']['id']), array('icon' => 'pencil', 'tooltip' => __d('eav', 'Editar este ítem')));
+    $actions[] = $this->Croogo->adminRowAction('', array('action' => 'delete', $attribute['EavAttribute']['id']), array('icon' => 'trash', 'tooltip' => __d('eav', 'Remover este ítem')), __d('eav', 'Você tem certeza?'));
+    $actions = $this->Html->div('item-actions', implode(' ', $actions));
+
+    // Title Column
+    $titleCol = $attribute['EavAttribute']['title'];
+
+    $rows[] = array(
+        '',
+        $attribute['EavAttribute']['id'],
+        $titleCol,
+        $attribute['EavAttribute']['slug'],
+        $actions,
+    );
+endforeach;
+echo $this->Html->tableCells($rows);
+$this->end();
