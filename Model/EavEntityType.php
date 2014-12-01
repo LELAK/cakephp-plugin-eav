@@ -71,7 +71,7 @@ class EavEntityType extends EavAppModel {
      * @var array
      */
     public $hasMany = array(
-        'Attribute' => array(
+        'EavAttribute' => array(
             'className' => 'Eav.EavAttribute',
             'foreignKey' => 'entity_type_id',
             'dependent' => false,

@@ -30,6 +30,7 @@ App::uses('EavAppController', 'Eav.Controller');
 class AttributesController extends EavAppController {
 
     public $uses = array('Eav.EavAttribute');
+    public $components = array('RequestHandler');
 
     public function beforeFilter() {
 
@@ -136,6 +137,26 @@ class AttributesController extends EavAppController {
         }
         $this->Session->setFlash(__d('eav', 'O atributo não pode ser excluído. Tente novamente'));
         $this->redirect(array('action' => 'index'));
+    }
+
+    public function admin_get() {
+        $this->_get();
+    }
+
+    public function get() {
+        $this->_get();
+    }
+
+    protected function _get() {
+
+        $this->EavAttribute->recursive = -1;
+
+        $output = $this->EavAttribute->getAttributesByConditions($this->request->query);
+
+        $this->set(array(
+            'data' => $output,
+            '_serialize' => array('data')
+        ));
     }
 
 }

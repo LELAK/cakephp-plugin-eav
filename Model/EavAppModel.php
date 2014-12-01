@@ -1,4 +1,5 @@
 <?php
+
 App::uses('AppModel', 'Model');
 /**
  * Eav App Model
@@ -17,7 +18,8 @@ App::uses('AppModel', 'Model');
  * @link          http://www.protelligence.com Protelligence
  * @package       plugins.Eav.Model
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
-*/
+ */
+
 /**
  * Eav App Model
  *
@@ -28,5 +30,21 @@ App::uses('AppModel', 'Model');
  */
 class EavAppModel extends AppModel {
 
-}
+    /**
+     * Grants security checking if condition sent by request is allowed
+     * 
+     * @param array $conditions
+     * @return boolean If the request should be allowed
+     */
+    protected function _is_conditions_allowed($allowedConditions, $conditions) {
 
+        foreach ($conditions as $key => $condition):
+            if (!in_array($key, $allowedConditions)):
+                return false;
+            endif;
+        endforeach;
+
+        return true;
+    }
+
+}

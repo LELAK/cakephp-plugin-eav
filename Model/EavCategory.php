@@ -2,37 +2,37 @@
 
 App::uses('EavAppModel', 'Eav.Model');
 /**
- * Eav Data Type Model
+ * Eav Category Model
  *
- * This file is contains the Attribute Model class
+ * This file is contains the Category Model class
  *
  * PHP 5
  *
  * Protelligence (http://cakephp.org)
- * Copyright 2009-2013, Protelligence (http://www.protelligence.com)
+ * Copyright 2014, LELAK Hipermídia (http://www.lelak.com.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2009-2013, Protelligence (http://www.protelligence.com)
- * @link          http://www.protelligence.com Protelligence
+ * @copyright     Copyright 2014, LELAK Hipermídia (http://www.lelak.com.br)
+ * @link          http://www.lelak.com.br LELAK hipermídia
  * @package       plugins.Eav.Model
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
- * Attribute Model
+ * Category Model
  *
- * Validations, Associations, and Methods for Attributes. Attributes are the dynamc fields added to a model.
  *
  * @package       plugins.Eav.Model
  *
  */
-class EavAttribute extends EavAppModel {
+class EavCategory extends EavAppModel {
 
-    public $useTable = 'eav_attributes';
-    public $name = 'EavAttribute';
-    protected $allowedConditions = ['EavAttribute.public', 'title', 'slug', 'id', 'description', 'input_type', 'multiple', 'optional'];
+    public $useTable = 'eav_categories';
+    public $name = 'EavCategory';
+    public $actAs = array('Tree');
+    protected $allowedConditions = ['EavCategory.public', 'slug', 'title', 'id'];
 
     /**
      * Display field
@@ -67,50 +67,47 @@ class EavAttribute extends EavAppModel {
                 'message' => 'Atalho deve ser único',
                 'allowEmpty' => false,
             ),
-        ),
-        'entity_type_id' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Tipo de entidade incorreto',
-                'allowEmpty' => false,
-            ),
-        ),
-        'data_type_id' => array(
-            'numeric' => array(
-                'rule' => array('numeric'),
-                'message' => 'Tipo de dado incorreto',
-                'allowEmpty' => false,
-            ),
-        ),
+        )
     );
 
     //The Associations below have been created with all possible keys, those that are not needed can be removed
 
     /**
-     * belongsTo associations
+     * hasMany associations
      *
      * @var array
      */
-    public $belongsTo = array(
-        'EavEntityType' => array(
-            'className' => 'Eav.EavEntityType',
-            'foreignKey' => 'entity_type_id'
-        ),
-        'EavDataType' => array(
-            'className' => 'Eav.EavDataType',
-            'foreignKey' => 'data_type_id'
-        )
-    );
     public $hasMany = array(
-        'EavCategories' => array(
+        'EavAttributes' => array(
             'className' => 'Eav.EavCategoryAttributes',
-            'foreignKey' => 'attribute_id',
+            'foreignKey' => 'category_id',
             'dependent' => true
         )
     );
 
+    public function beforeSave($options = array()) {
+        // If there is an ID on the request, is an edit request, so we
+        // should clear the category attributes table to populate it again.
+        if ($this->id && !empty($this->data[$this->alias][$this->primaryKey])) {
+            if (!$this->clear_category_attributes_by_id($this->id)) {
+                return false;
+            }
+        }
+
+        return parent::beforeSave();
+    }
+
     /**
-     * Get list of attributes by array of conditions
+     * Clear the category attribute relations by category id
+     * 
+     * @param integer $id
+     */
+    public function clear_category_attributes_by_id($id) {
+        return $this->EavAttributes->deleteAll(array('category_id' => $id), false);
+    }
+
+    /**
+     * Get list of categories by array of conditions
      * 
      * Eg.:
      * 
@@ -124,35 +121,54 @@ class EavAttribute extends EavAppModel {
      * @param array $conditions
      * @return array Match categories
      */
-    public function getAttributesByConditions($conditions) {
+    public function getCategoriesByConditions($conditions) {
 
         // Prevent users to search for attributes that are not public if is not
         // in admin prefix routing
         $securedConditions = array(
-            "EavAttribute.public" => 1
+            "EavCategory.public" => 1
         );
 
         // If user is not admin, should not retrieve all fields from database
         $fields = !(bool) Configure::read("Routing.admin") ? array(
             'id',
+            'parent_id',
             'title',
-            'slug',
-            'description',
-            'multiple',
-            'optional',
-            'input_type'
+            'slug'
                 ) : '';
 
         $conditions = !(bool) Configure::read("Routing.admin") ? array_merge($conditions, $securedConditions) : $conditions;
 
         if ((bool) Configure::read("Routing.admin") || $this->_is_conditions_allowed($this->allowedConditions, $conditions)):
 
-            $attributes = $this->find('all', array('fields' => $fields, 'conditions' => $conditions));
-            return $attributes ? $attributes : array();
+            $categories = $this->find('all', array('fields' => $fields, 'conditions' => $conditions));
+            return $categories ? $categories : array();
 
         endif;
 
         return array();
+    }
+
+    /**
+     * Get a category with respective attributes by category id
+     * 
+     * @param integer id
+     * @return array The category returned
+     */
+    public function getCategoryAndAttributesById($id) {
+        $output = $this->find('first', array('conditions' => array('id' => $id), 'contain' => array('EavAttributes' => array('EavAttribute'))));
+        return $output ? $output : array();
+    }
+
+    /**
+     * Get a category with respective attributes by category slug
+     * 
+     * @param string $slug
+     * @return array The category returned
+     */
+    public function getCategoryAndAttributesBySlug($slug) {
+        $output = $this->find('first', array('conditions' => array('slug' => $slug), 'contain' => array('EavAttributes' => array('EavAttribute'))));
+        return $output ? $output : array();
     }
 
 }

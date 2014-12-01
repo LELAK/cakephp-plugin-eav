@@ -1,4 +1,5 @@
 <?php
+
 /**
  * Eav Application level Controller
  *
@@ -18,7 +19,6 @@
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-
 App::uses('AppController', 'Controller');
 
 /**
@@ -28,8 +28,15 @@ App::uses('AppController', 'Controller');
  * will inherit them.
  *
  * @package       plugins.Eav.Controller
-  */
+ */
 class EavAppController extends AppController {
 
-}
+    public function beforeFilter() {
 
+        // Define if request are in /admin/
+        Configure::write('Routing.admin', !empty($this->request->params['admin']));
+
+        parent::beforeFilter();
+    }
+
+}
