@@ -209,16 +209,25 @@ class EavTablesMigration extends CakeMigration {
      * @access public
      */
     public function after($direction) {
-        if ($direction === 'up'):
-// TODO: Create method to insert this data inside `eav_data_types` table
-//            INSERT INTO `eav_data_types` VALUES(1, 'string', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(2, 'text', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(3, 'integer', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(6, 'timestamp', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(10, 'boolean', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(11, 'key', NOW(), NOW());
-//            INSERT INTO `eav_data_types` VALUES(12, 'uuid', NOW(), NOW());
-        endif;
+
+
+        $dataType = ClassRegistry::init('EavDataType');
+        if ($direction === 'up') {
+            // add 2 records to statues table
+            $data = array(
+                array('name' => 'string'),
+                array('name' => 'text'),
+                array('name' => 'integer'),
+                array('name' => 'timestamp'),
+                array('name' => 'boolean'),
+                array('name' => 'key'),
+                array('name' => 'uuid'),
+            );
+            $dataType->create();
+            $dataType->saveAll($data);
+        } elseif ($direction === 'down') {
+            // do more work here
+        }
         return true;
     }
 
