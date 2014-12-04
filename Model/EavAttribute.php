@@ -103,7 +103,7 @@ class EavAttribute extends EavAppModel {
     );
     public $hasMany = array(
         'EavCategories' => array(
-            'className' => 'Eav.EavCategoryAttributes',
+            'className' => 'Eav.EavCategoryAttribute',
             'foreignKey' => 'attribute_id',
             'dependent' => true
         )
@@ -132,22 +132,11 @@ class EavAttribute extends EavAppModel {
             "EavAttribute.public" => 1
         );
 
-        // If user is not admin, should not retrieve all fields from database
-        $fields = !(bool) Configure::read("Routing.admin") ? array(
-            'id',
-            'title',
-            'slug',
-            'description',
-            'multiple',
-            'optional',
-            'input_type'
-                ) : '';
-
         $conditions = !(bool) Configure::read("Routing.admin") ? array_merge($conditions, $securedConditions) : $conditions;
 
         if ((bool) Configure::read("Routing.admin") || $this->_is_conditions_allowed($this->allowedConditions, $conditions)):
 
-            $attributes = $this->find('all', array('fields' => $fields, 'conditions' => $conditions));
+            $attributes = $this->find('all', array('conditions' => $conditions));
             return $attributes ? $attributes : array();
 
         endif;

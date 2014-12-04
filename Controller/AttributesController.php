@@ -29,7 +29,7 @@ App::uses('EavAppController', 'Eav.Controller');
  */
 class AttributesController extends EavAppController {
 
-    public $uses = array('Eav.EavAttribute');
+    public $uses = array('Eav.EavAttribute', 'Eav.EavCategoryAttribute');
     public $components = array('RequestHandler');
 
     public function beforeFilter() {
@@ -139,19 +139,35 @@ class AttributesController extends EavAppController {
         $this->redirect(array('action' => 'index'));
     }
 
-    public function admin_get() {
-        $this->_get();
+    /**
+     * JSON REQUESTS
+     */
+    public function admin_get($format = false, $identifier = null) {
+        $this->_get($format, $identifier);
     }
 
-    public function get() {
-        $this->_get();
+    public function get($format = false, $identifier = null) {
+        $this->_get($format, $identifier);
     }
 
-    protected function _get() {
+    protected function _get($format = false, $identifier = null) {
+
+        $output = array();
 
         $this->EavAttribute->recursive = -1;
 
-        $output = $this->EavAttribute->getAttributesByConditions($this->request->query);
+        switch (true):
+            // Find an attribute by slug
+            case ($format == 'slug'):
+                $output = $this->EavAttribute->findBySlug($identifier);
+                break;
+            // Find an attribute by id
+            case ($format == 'id'):
+                $output = $this->EavAttribute->findById($identifier);
+                break;
+            default:
+                $output = $this->EavAttribute->getAttributesByConditions($this->request->query);
+        endswitch;
 
         $this->set(array(
             'data' => $output,

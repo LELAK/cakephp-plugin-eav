@@ -3,21 +3,22 @@
     //define dependencies to requireJs
     define(
             [
-                //App 
-                'coreServices',
+                // Dependencies
+                'attributeServices',
+                // App 
                 'categoryControllers',
                 'categoryServices',
-                'attributeServices'
+                // Vendors
+                'ui.select'
             ],
             angular.module('categoryApp',
                     [
-                        //App
-                        'coreServices',
+                        // Dependencies
+                        'attributeServices',
+                        // App
                         'categoryControllers',
                         'categoryServices',
-                        'attributeServices'
-                    ])
-            );
-
-
+                        // Vendors
+                        'ui.select'
+                    ]));
 })(define, angular);

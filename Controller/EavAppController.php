@@ -33,10 +33,10 @@ class EavAppController extends AppController {
 
     public function beforeFilter() {
 
+        parent::beforeFilter();
+
         // Define if request are in /admin/
         Configure::write('Routing.admin', !empty($this->request->params['admin']));
-
-        parent::beforeFilter();
     }
 
 }

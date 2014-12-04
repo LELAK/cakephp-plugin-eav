@@ -30,6 +30,21 @@ App::uses('AppModel', 'Model');
  */
 class EavAppModel extends AppModel {
 
+    protected $assocPublicConf = array(
+        'EavCategory' => array(
+            "fields" => array('EavCategory.title', 'EavCategory.slug'),
+            "conditions" => array('EavCategory.public' => 1)
+        ),
+        'EavAttributes' => array(
+            "fields" => array('EavAttributes.title', 'EavAttributes.slug', 'EavAttributes.description', 'EavAttributes.input_type', 'EavAttributes.multiple', 'EavAttributes.optional'),
+            "conditions" => array('EavAttributes.public' => 1)
+        ),
+        'EavAttribute' => array(
+            "fields" => array('EavAttribute.title', 'EavAttribute.slug', 'EavAttribute.description', 'EavAttribute.input_type', 'EavAttribute.multiple', 'EavAttribute.optional'),
+            "conditions" => array('EavAttribute.public' => 1)
+        )
+    );
+
     /**
      * Grants security checking if condition sent by request is allowed
      * 
@@ -45,6 +60,35 @@ class EavAppModel extends AppModel {
         endforeach;
 
         return true;
+    }
+
+    /**
+     * To prevent public users to view private information using the RESTful
+     * resources of EAV, this method creates conditions and specify fields
+     * if the requests are not in the /admin/ prefix.
+     */
+    public function beforeFind($query = array()) {
+        // If the request is not in admin prefix. Load only public fields.
+        if (!(bool) Configure::read("Routing.admin")):
+            if (isset($this->assocPublicConf[$this->alias])):
+                // Prepare public conditions
+                $query['conditions'] = isset($query['conditions']) && is_array($query['conditions']) ? array_unique(array_merge($query['conditions'], $this->assocPublicConf[$this->alias]["conditions"]), SORT_REGULAR) : $this->assocPublicConf[$this->alias]["conditions"];
+                // Prepare public fields
+                $query['fields'] = isset($query['fields']) && is_array($query['fields']) ? array_unique(array_merge($query['fields'], $this->assocPublicConf[$this->alias]["fields"]), SORT_REGULAR) : $this->assocPublicConf[$this->alias]["fields"];
+            endif;
+            // Prepare public associations
+            $assocPossibilities = ['belongsTo', 'hasMany', 'hasOne', 'hasAndBelongsToMany'];
+            foreach ($assocPossibilities as $assoc):
+                foreach ($this->assocPublicConf as $assocKey => $assocConf):
+                    if (isset($this->{$assoc}[$assocKey])):
+                        $this->{$assoc}[$assocKey] = array_merge($this->{$assoc}[$assocKey], $assocConf);
+                    endif;
+                endforeach;
+            endforeach;
+
+        endif;
+
+        return $query;
     }
 
 }

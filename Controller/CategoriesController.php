@@ -2,37 +2,42 @@
 
 App::uses('EavAppController', 'Eav.Controller');
 /**
- * Eav Attributes Controller
+ * Eav Category Model
  *
- * This file is contains the AttributesController class
+ * This file is contains the CategoriesController class
  *
  * PHP 5
  *
  * Protelligence (http://cakephp.org)
- * Copyright 2009-2013, Protelligence (http://www.protelligence.com)
+ * Copyright 2014, LELAK Hipermídia (http://www.lelak.com.br)
  *
  * Licensed under The MIT License
  * Redistributions of files must retain the above copyright notice.
  *
- * @copyright     Copyright 2009-2013, Protelligence (http://www.protelligence.com)
- * @link          http://www.protelligence.com Protelligence
+ * @copyright     Copyright 2014, LELAK Hipermídia (http://www.lelak.com.br)
+ * @link          http://www.lelak.com.br LELAK hipermídia
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
 
 /**
- * Attributes Controller
+ * Categories Controller
  *
- * Methods to manage Attributes. Attributes are the dynamic fields added to an Entity
+ * Methods to manage Categories
  *
  * @package       plugins.Eav.Controller
  */
 class CategoriesController extends EavAppController {
 
-    public $uses = array('Eav.EavCategory', 'Eav.EavAttribute', 'Eav.EavCategoryAttributes');
+    public $uses = array('Eav.EavCategory', 'Eav.EavAttribute', 'Eav.EavCategoryAttribute');
+    public $components = array('Paginator');
+    public $paginate = array(
+        'order' => array('EavCategory.lft asc')
+    );
 
     public function beforeFilter() {
         parent::beforeFilter();
+
         $this->Security->validatePost = false;
     }
 
@@ -43,6 +48,7 @@ class CategoriesController extends EavAppController {
      */
     public function admin_index() {
         $this->EavCategory->recursive = 0;
+
         $this->set('categories', $this->paginate());
     }
 
@@ -76,10 +82,9 @@ class CategoriesController extends EavAppController {
             }
         }
 
-        $categories = $this->EavCategory->find('list');
-        $attributes = $this->EavAttribute->find('list');
+        $categories = $this->EavCategory->generateTreeList(null, null, null, '-');
 
-        $this->set(compact('attributes', 'categories'));
+        $this->set(compact('categories'));
 
         $this->render('admin_form');
     }
@@ -106,10 +111,6 @@ class CategoriesController extends EavAppController {
         } else {
             $this->request->data = $this->EavCategory->getCategoryAndAttributesById($id);
         }
-
-        $categories = $this->EavCategory->find('list', array('conditions' => array('EavCategory.id NOT' => $id)));
-        $attributes = $this->EavAttribute->find('list');
-        $this->set(compact('attributes', 'categories'));
 
         $this->render('admin_form');
     }
@@ -139,40 +140,60 @@ class CategoriesController extends EavAppController {
     /**
      * JSON REQUESTS
      */
-    public function admin_attributes() {
-        $this->_attributes();
+    public function admin_get($path = false, $identifier = null) {
+        $this->_get($path, $identifier);
     }
 
-    public function attributes() {
-        $this->_attributes();
+    public function get($path = false, $identifier = null) {
+        $this->_get($path, $identifier);
     }
 
-    public function admin_get() {
-        $this->_get();
-    }
+    protected function _get($path = false, $identifier = null) {
 
-    public function get() {
-        $this->_get();
-    }
+        $output = array();
 
-    /**
-     * Get information about category by condition
-     */
-    protected function _get() {
         $this->EavCategory->recursive = -1;
+        $this->EavCategoryAttribute->recursive = 1;
 
-        $output = $this->EavCategory->getCategoriesByConditions($this->request->query);
-
-        $this->set(array(
-            'data' => $output,
-            '_serialize' => array('data')
-        ));
-    }
-
-    protected function _attributes() {
-        $this->EavCategoryAttributes->recursive = 1;
-
-        $output = $this->EavCategoryAttributes->getAttributesByConditions($this->request->query);
+        switch (true):
+            // Map all the attributes set to this category
+            case ($path == 'attributes'):
+                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier);
+                break;
+            // Map ONLY the attributes inherited from the category tree and not itself
+            case ($path == 'attributes_inherited'):
+                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+                    'inheritedOnly' => true
+                ));
+                break;
+            // Map the attributes set for this category only (without inheritance)
+            case ($path == 'attributes_own'):
+                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+                    'inheritance' => false,
+                ));
+                break;
+            // Map the attributes available for this category
+            case ($path == 'attributes_available'):
+                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+                    'inverted' => true
+                ));
+                break;
+            // Find an category by slug
+            case ($path == 'slug'):
+                $output = $this->EavCategory->findBySlug($identifier);
+                break;
+            // Find an category by id
+            case ($path == 'id'):
+                $output = $this->EavCategory->findById($identifier);
+                break;
+            // Get all categories non related (that hasn't the specific category ID as parent)
+            case ($path == 'non_child'):
+                $output = $this->EavCategory->getCategoriesNonChildOf($identifier);
+                break;
+            // Map the category list
+            default:
+                $output = $this->EavCategory->getCategoriesByConditions($this->request->query);
+        endswitch;
 
         $this->set(array(
             'data' => $output,

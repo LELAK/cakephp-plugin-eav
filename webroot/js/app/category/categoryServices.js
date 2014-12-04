@@ -2,69 +2,41 @@
     'use strict';
 
     define(
-            [],
-            angular.module('categoryServices', [])
+            ['ngResource'],
+            angular.module('categoryServices', ['ngResource'])
             .factory('categoryService', categoryService)
             );
     /**
      * Serch Service
      */
-    categoryService.$inject = ['$http'];
-    function categoryService($http) {
-
-        var vm = this;
-
-        vm.paths = {
-            categoryBySlug: Croogo.basePath + 'admin/eav/categories/get.json',
-            categoryById: Croogo.basePath + 'admin/eav/categories/get.json',
-            getCategoryAttributesByCategoryId: Croogo.basePath + 'admin/eav/categories/attributes.json'
-        };
-
+    categoryService.$inject = ['$resource'];
+    function categoryService($resource) {
         return {
-            getCategoryBySlug: getCategoryBySlug,
-            getCategoryById: getCategoryById,
-            getCategoryAttributesByCategoryId: getCategoryAttributesByCategoryId
+            AttributesInherited: $resource(Croogo.basePath + 'admin/eav/categories/get/attributes_inherited/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            Attributes: $resource(Croogo.basePath + 'admin/eav/categories/get/attributes/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            AttributesOwn: $resource(Croogo.basePath + 'admin/eav/categories/get/attributes_own/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            AttributesAvailable: $resource(Croogo.basePath + 'admin/eav/categories/get/attributes_available/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            NonChildById: $resource(Croogo.basePath + 'admin/eav/categories/get/non_child/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            ById: $resource(Croogo.basePath + 'admin/eav/categories/get/id/:id.json', {id: '@_id'}, {
+                query: {method: 'GET'}
+            }),
+            BySlug: $resource(Croogo.basePath + 'admin/eav/categories/get/slug/:slug.json', {slug: '@_slug'}, {
+                query: {method: 'GET'}
+            }),
+            List: $resource(Croogo.basePath + 'admin/eav/categories/get.json', {}, {
+                query: {method: 'GET'}
+            })
         };
-
-        /**
-         * Get a category by slug
-         * 
-         * @param string Slug
-         * @returns JSON The category
-         */
-        function getCategoryBySlug(slug) {
-            return get(vm.paths.categoryBySlug, {slug: slug});
-        }
-
-        function getCategoryAttributesByCategoryId(id) {
-            return get(vm.paths.getCategoryAttributesByCategoryId, {category_id: id});
-        }
-
-        /**
-         * Get a category by id
-         * 
-         * @param string Slug
-         * @returns JSON The category
-         */
-        function getCategoryById(id) {
-            return get(vm.paths.categoryById, {id: id});
-        }
-
-        function get(path, params) {
-//            $scope.is_load = true;
-            return $http.get(path, {params: params})
-                    .then(getCompleted)
-                    .catch(getFailed);
-
-            function getCompleted(response) {
-//                $scope.is_load = false;
-                return response.data;
-            }
-            function getFailed(error) {
-//                $scope.is_load = false;
-                console.log('XHR failed for products by global:' + error);
-            }
-        }
     }
 
 })(define, angular);

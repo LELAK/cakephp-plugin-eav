@@ -31,7 +31,7 @@ class EavCategory extends EavAppModel {
 
     public $useTable = 'eav_categories';
     public $name = 'EavCategory';
-    public $actAs = array('Tree');
+    public $actsAs = array('Tree');
     protected $allowedConditions = ['EavCategory.public', 'slug', 'title', 'id'];
 
     /**
@@ -79,7 +79,7 @@ class EavCategory extends EavAppModel {
      */
     public $hasMany = array(
         'EavAttributes' => array(
-            'className' => 'Eav.EavCategoryAttributes',
+            'className' => 'Eav.EavCategoryAttribute',
             'foreignKey' => 'category_id',
             'dependent' => true
         )
@@ -89,7 +89,7 @@ class EavCategory extends EavAppModel {
         // If there is an ID on the request, is an edit request, so we
         // should clear the category attributes table to populate it again.
         if ($this->id && !empty($this->data[$this->alias][$this->primaryKey])) {
-            if (!$this->clear_category_attributes_by_id($this->id)) {
+            if (!$this->clearCategoryAttributesById($this->id)) {
                 return false;
             }
         }
@@ -102,7 +102,7 @@ class EavCategory extends EavAppModel {
      * 
      * @param integer $id
      */
-    public function clear_category_attributes_by_id($id) {
+    public function clearCategoryAttributesById($id) {
         return $this->EavAttributes->deleteAll(array('category_id' => $id), false);
     }
 
@@ -122,31 +122,8 @@ class EavCategory extends EavAppModel {
      * @return array Match categories
      */
     public function getCategoriesByConditions($conditions) {
-
-        // Prevent users to search for attributes that are not public if is not
-        // in admin prefix routing
-        $securedConditions = array(
-            "EavCategory.public" => 1
-        );
-
-        // If user is not admin, should not retrieve all fields from database
-        $fields = !(bool) Configure::read("Routing.admin") ? array(
-            'id',
-            'parent_id',
-            'title',
-            'slug'
-                ) : '';
-
-        $conditions = !(bool) Configure::read("Routing.admin") ? array_merge($conditions, $securedConditions) : $conditions;
-
-        if ((bool) Configure::read("Routing.admin") || $this->_is_conditions_allowed($this->allowedConditions, $conditions)):
-
-            $categories = $this->find('all', array('fields' => $fields, 'conditions' => $conditions));
-            return $categories ? $categories : array();
-
-        endif;
-
-        return array();
+        $categories = $this->find('all', array('conditions' => $conditions));
+        return $categories ? $categories : array();
     }
 
     /**
@@ -169,6 +146,25 @@ class EavCategory extends EavAppModel {
     public function getCategoryAndAttributesBySlug($slug) {
         $output = $this->find('first', array('conditions' => array('slug' => $slug), 'contain' => array('EavAttributes' => array('EavAttribute'))));
         return $output ? $output : array();
+    }
+
+    public function getCategoriesNonChildOf($id) {
+
+        $this->recursive = -1;
+        $idExclusionList = array();
+
+        $this->id = $id;
+        if (!$this->exists()):
+            return array();
+        endif;
+
+        $childrens = $this->children($id);
+        foreach ($childrens as $child):
+            $idExclusionList[] = $child['EavCategory']['id'];
+        endforeach;
+        array_push($idExclusionList, $id);
+
+        return $this->find('all', array('conditions' => array('EavCategory.id NOT' => $idExclusionList)));
     }
 
 }

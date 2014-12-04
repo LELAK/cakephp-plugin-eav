@@ -1,26 +1,32 @@
-//Module bootstrap Config
+// Module bootstrap Config
 require.config({
     baseUrl: Croogo.basePath + 'eav',
+    waitSeconds: 0,
     paths: {
-        //Angular SRC
+        // Angular
         'angular': 'vendors/angularjs/angular.min',
-        //Module App
+        'ngResource': 'vendors/angularjs/angular-resource.min',
+        // Dependencies
+        'attributeServices': 'js/app/attribute/attributeServices',
+        // App
         'categoryApp': 'js/app/category/categoryApp',
         'categoryControllers': 'js/app/category/categoryControllers',
         'categoryServices': 'js/app/category/categoryServices',
-        'attributeServices': 'js/app/attribute/attributeServices',
-        'coreServices': 'js/app/core/coreServices',
-        'angularUiSelect': 'vendors/angularui-select/select.min'
+        // Vendors
+        'ui.select': 'vendors/angularui-select/select.min'
     },
     shim: {
         'angular': {
             exports: 'angular'
         },
-        'angularUiSelect': {
+        'ngResource': {
+            deps: ['angular']
+        },
+        'ui.select': {
             deps: ['angular']
         },
         'categoryApp': {
-            deps: ['angular', 'angularUiSelect']
+            deps: ['angular', 'ui.select']
         }
     }
 });
@@ -28,6 +34,6 @@ require.config({
 //Module Bootstrap
 require(['categoryApp'], function() {
     angular.element(document).ready(function() {
-        angular.bootstrap(angular.element('#category-form-app'), ['categoryApp', 'ui.select', 'categoryControllers', 'categoryServices', 'attributeServices', 'coreServices']);
+        angular.bootstrap(angular.element('#category-form-app'), ['categoryApp']);
     });
 });
