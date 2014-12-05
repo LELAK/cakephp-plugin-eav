@@ -12,13 +12,13 @@
     attributeService.$inject = ['$resource'];
     function attributeService($resource) {
         return {
-            Get: $resource(Croogo.basePath + 'admin/eav/attributes/get.json', {}, {
+            Get: $resource(Croogo.basePath + 'api/1.0/eav/attributes/get.json', {}, {
                 query: {method: 'GET'}
             }),
-            ById: $resource(Croogo.basePath + 'admin/eav/attributes/get/id/:id.json', {id: '@_id'}, {
+            ById: $resource(Croogo.basePath + 'api/1.0/eav/attributes/get_by_id/:id.json', {id: '@_id'}, {
                 query: {method: 'GET'}
             }),
-            BySlug: $resource(Croogo.basePath + 'admin/eav/attributes/get/slug/:slug.json', {slug: '@_slug'}, {
+            BySlug: $resource(Croogo.basePath + 'api/1.0/eav/attributes/get_by_slug/:slug.json', {slug: '@_slug'}, {
                 query: {method: 'GET'}
             })
         };

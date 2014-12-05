@@ -34,13 +34,12 @@ class CategoriesController extends EavAppController {
     public $paginate = array(
         'order' => array('EavCategory.lft asc')
     );
+    protected $apiVersions = ['1.0'];
 
     public function beforeFilter() {
         parent::beforeFilter();
-
-        $this->Security->validatePost = false;
     }
-
+    
     /**
      * List the attributes
      *
@@ -138,65 +137,135 @@ class CategoriesController extends EavAppController {
     }
 
     /**
-     * JSON REQUESTS
+     * Get all categories by GET conditions
+     * 
+     * @param string $identifier
      */
-    public function admin_get($path = false, $identifier = null) {
-        $this->_get($path, $identifier);
-    }
-
-    public function get($path = false, $identifier = null) {
-        $this->_get($path, $identifier);
-    }
-
-    protected function _get($path = false, $identifier = null) {
-
-        $output = array();
-
+    public function api_get() {
         $this->EavCategory->recursive = -1;
-        $this->EavCategoryAttribute->recursive = 1;
 
-        switch (true):
-            // Map all the attributes set to this category
-            case ($path == 'attributes'):
-                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier);
-                break;
-            // Map ONLY the attributes inherited from the category tree and not itself
-            case ($path == 'attributes_inherited'):
-                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
-                    'inheritedOnly' => true
-                ));
-                break;
-            // Map the attributes set for this category only (without inheritance)
-            case ($path == 'attributes_own'):
-                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
-                    'inheritance' => false,
-                ));
-                break;
-            // Map the attributes available for this category
-            case ($path == 'attributes_available'):
-                $output = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
-                    'inverted' => true
-                ));
-                break;
-            // Find an category by slug
-            case ($path == 'slug'):
-                $output = $this->EavCategory->findBySlug($identifier);
-                break;
-            // Find an category by id
-            case ($path == 'id'):
-                $output = $this->EavCategory->findById($identifier);
-                break;
-            // Get all categories non related (that hasn't the specific category ID as parent)
-            case ($path == 'non_child'):
-                $output = $this->EavCategory->getCategoriesNonChildOf($identifier);
-                break;
-            // Map the category list
-            default:
-                $output = $this->EavCategory->getCategoriesByConditions($this->request->query);
-        endswitch;
+        $data = $this->EavCategory->getCategoriesByConditions($this->request->query);
 
         $this->set(array(
-            'data' => $output,
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category attributes by category id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_attributes($identifier = null) {
+        $this->EavCategoryAttribute->recursive = 1;
+
+        $data = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier);
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category attributes inherited by category id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_attributes_inherited($identifier = null) {
+        $this->EavCategoryAttribute->recursive = 1;
+
+        $data = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+            'inheritedOnly' => true
+        ));
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category own attributes by category id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_attributes_own($identifier = null) {
+        $this->EavCategoryAttribute->recursive = 1;
+
+        $data = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+            'inheritance' => false,
+        ));
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category available attributes by category id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_attributes_available($identifier = null) {
+        $this->EavCategoryAttribute->recursive = 1;
+
+        $data = $this->EavCategoryAttribute->getAttributesByCategoryId($identifier, array(
+            'inverted' => true
+        ));
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category by slug
+     * 
+     * @param string $identifier
+     */
+    public function api_get_by_slug($identifier = null) {
+        $this->EavCategory->recursive = -1;
+
+        $data = $this->EavCategory->findBySlug($identifier);
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get category by id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_by_id($identifier = null) {
+        $this->EavCategory->recursive = -1;
+
+        $data = $this->EavCategory->findById($identifier);
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get non child categories from specified category id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_non_child($identifier = null) {
+        $this->EavCategory->recursive = -1;
+
+        $data = $this->EavCategory->getCategoriesNonChildOf($identifier);
+
+        $this->set(array(
+            'data' => $data,
             '_serialize' => array('data')
         ));
     }

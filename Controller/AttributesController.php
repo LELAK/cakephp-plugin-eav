@@ -31,6 +31,7 @@ class AttributesController extends EavAppController {
 
     public $uses = array('Eav.EavAttribute', 'Eav.EavCategoryAttribute');
     public $components = array('RequestHandler');
+    protected $apiVersions = ['1.0'];
 
     public function beforeFilter() {
 
@@ -140,37 +141,47 @@ class AttributesController extends EavAppController {
     }
 
     /**
-     * JSON REQUESTS
+     * Get all attributes by GET conditions
      */
-    public function admin_get($format = false, $identifier = null) {
-        $this->_get($format, $identifier);
-    }
-
-    public function get($format = false, $identifier = null) {
-        $this->_get($format, $identifier);
-    }
-
-    protected function _get($format = false, $identifier = null) {
-
-        $output = array();
-
+    public function api_get() {
         $this->EavAttribute->recursive = -1;
 
-        switch (true):
-            // Find an attribute by slug
-            case ($format == 'slug'):
-                $output = $this->EavAttribute->findBySlug($identifier);
-                break;
-            // Find an attribute by id
-            case ($format == 'id'):
-                $output = $this->EavAttribute->findById($identifier);
-                break;
-            default:
-                $output = $this->EavAttribute->getAttributesByConditions($this->request->query);
-        endswitch;
+        $data = $this->EavAttribute->getAttributesByConditions($this->request->query);
 
         $this->set(array(
-            'data' => $output,
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get attribute by slug
+     * 
+     * @param string $identifier
+     */
+    public function api_get_by_slug($identifier = null) {
+        $this->EavAttribute->recursive = -1;
+
+        $data = $this->EavAttribute->findBySlug($identifier);
+
+        $this->set(array(
+            'data' => $data,
+            '_serialize' => array('data')
+        ));
+    }
+
+    /**
+     * Get attribute by id
+     * 
+     * @param string $identifier
+     */
+    public function api_get_by_id($identifier = null) {
+        $this->EavAttribute->recursive = -1;
+
+        $data = $this->EavAttribute->findById($identifier);
+
+        $this->set(array(
+            'data' => $data,
             '_serialize' => array('data')
         ));
     }

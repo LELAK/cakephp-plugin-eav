@@ -46,30 +46,13 @@ class EavAppModel extends AppModel {
     );
 
     /**
-     * Grants security checking if condition sent by request is allowed
-     * 
-     * @param array $conditions
-     * @return boolean If the request should be allowed
-     */
-    protected function _is_conditions_allowed($allowedConditions, $conditions) {
-
-        foreach ($conditions as $key => $condition):
-            if (!in_array($key, $allowedConditions)):
-                return false;
-            endif;
-        endforeach;
-
-        return true;
-    }
-
-    /**
      * To prevent public users to view private information using the RESTful
      * resources of EAV, this method creates conditions and specify fields
      * if the requests are not in the /admin/ prefix.
      */
     public function beforeFind($query = array()) {
         // If the request is not in admin prefix. Load only public fields.
-        if (!(bool) Configure::read("Routing.admin")):
+        if (!(bool) CakeSession::read("Routing.admin")):
             if (isset($this->assocPublicConf[$this->alias])):
                 // Prepare public conditions
                 $query['conditions'] = isset($query['conditions']) && is_array($query['conditions']) ? array_unique(array_merge($query['conditions'], $this->assocPublicConf[$this->alias]["conditions"]), SORT_REGULAR) : $this->assocPublicConf[$this->alias]["conditions"];
