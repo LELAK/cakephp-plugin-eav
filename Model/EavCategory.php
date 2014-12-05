@@ -32,7 +32,6 @@ class EavCategory extends EavAppModel {
     public $useTable = 'eav_categories';
     public $name = 'EavCategory';
     public $actsAs = array('Tree');
-    protected $allowedConditions = ['EavCategory.public', 'slug', 'title', 'id'];
 
     /**
      * Display field
