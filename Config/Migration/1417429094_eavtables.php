@@ -140,33 +140,7 @@ class EavTablesMigration extends CakeMigration {
                         'PRIMARY' => array('column' => 'id', 'unique' => 1)
                     ),
                     'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-                ),
-                'eav_categories' => array(
-                    'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'length' => 20, 'key' => 'primary'),
-                    'parent_id' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 36),
-                    'title' => array('type' => 'string', 'null' => true, 'default' => null, 'length' => 255, 'collate' => 'utf8_bin'),
-                    'slug' => array('type' => 'string', 'null' => false, 'length' => 100, 'charset' => 'utf8', 'key' => 'unique'),
-                    'public' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1),
-                    'created' => array('type' => 'datetime', 'null' => true, 'default' => null),
-                    'modified' => array('type' => 'datetime', 'null' => true, 'default' => null),
-                    'lft' => array('type' => 'integer', 'null' => true, 'default' => null),
-                    'rght' => array('type' => 'integer', 'null' => true, 'default' => null),
-                    'indexes' => array(
-                        'PRIMARY' => array('column' => 'id', 'unique' => 1),
-                        'UNIQUE' => array('column' => 'slug', 'unique' => 1)
-                    ),
-                    'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_unicode_ci', 'engine' => 'InnoDB')
-                ),
-                'eav_category_attributes' => array(
-                    'id' => array('type' => 'integer', 'null' => false, 'default' => null, 'key' => 'primary'),
-                    'category_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_bin'),
-                    'attribute_id' => array('type' => 'string', 'null' => false, 'default' => null, 'length' => 36, 'collate' => 'utf8_bin'),
-                    'filtered' => array('type' => 'integer', 'null' => false, 'default' => 0, 'length' => 1),
-                    'indexes' => array(
-                        'PRIMARY' => array('column' => 'id', 'unique' => 1)
-                    ),
-                    'tableParameters' => array('charset' => 'utf8', 'collate' => 'utf8_general_ci', 'engine' => 'InnoDB')
-                ),
+                )
             )
         ),
         'down' => array(

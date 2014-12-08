@@ -155,7 +155,7 @@ class EavBehavior extends ModelBehavior {
                         )
                     );
 
-                    $this->entityModel->$alias->bindModel(array('belongsTo' => array_merge($this->entityModel->belongsTo, $belongsTo)));
+                    $this->entityModel->$alias->bindModel(array('belongsTo' => array_merge($this->entityModel->belongsTo, $belongsTo)), false);
 
                     $hasMany = array(
                         $alias => array(
@@ -165,7 +165,7 @@ class EavBehavior extends ModelBehavior {
                         )
                     );
 
-                    $this->entityModel->bindModel(array('hasMany' => array_merge($this->entityModel->hasMany, $hasMany)));
+                    $this->entityModel->bindModel(array('hasMany' => array_merge($this->entityModel->hasMany, $hasMany)), false);
                 }
             }
 
@@ -258,7 +258,6 @@ class EavBehavior extends ModelBehavior {
     private function _getVirtualFieldSql(Model $model, $entityId = null) {
         if ($model != null) {
             $fields = $this->_getVirtualFieldsByModel($model);
-
             if (!empty($fields)) {
                 $fieldData = array();
                 foreach ($fields as $field) {
@@ -267,6 +266,7 @@ class EavBehavior extends ModelBehavior {
                     $dbo = $this->$valueModel->getDataSource();
                     $table = 'eav_attribute_' . $field['EavDataType']['name'] . '_values';
                     $table = $dbo->fullTableName($this->$valueModel);
+
                     if ($entityId) {
                         $conditionsSubQuery['`' . $valueModel . '`.`entity_id`'] = $entityId;
                     } else {
@@ -311,7 +311,7 @@ class EavBehavior extends ModelBehavior {
 
         $attribute = ClassRegistry::init($this->attributeModel)->find('first', array(
             'conditions' => array(
-                'name' => $attributeName
+                'title' => $attributeName
             )
         ));
         $valueModel = $this->valueModels[$attribute['EavDataType']['name']];
@@ -394,7 +394,7 @@ class EavBehavior extends ModelBehavior {
                         'id'
                     ),
                     'conditions' => array(
-                        $this->attributeModel . '.name' => $name
+                        $this->attributeModel . '.title' => $name
                     )
         ));
     }
@@ -551,7 +551,7 @@ class EavBehavior extends ModelBehavior {
                     $entityModel . '.id' => $entityId
                 ));
                 foreach ($values as $key => $value) {
-                    $result['AttributeValue'][$value[$attributeModel]['name']] = $value[$dataModel]['value'];
+                    $result['AttributeValue'][$value[$attributeModel]['title']] = $value[$dataModel]['value'];
                 }
             }
             return result;
@@ -577,9 +577,14 @@ class EavBehavior extends ModelBehavior {
      * @param unknown_type $value
      */
     private function _extractField(Model &$Model, $key, $value) {
-        $db = &ConnectionManager::getDataSource($Model->useDbConfig);
-        $operatorMatch = '/^((' . implode(')|(', $db->__sqlOps);
+
+        $db = ConnectionManager::getDataSource($Model->useDbConfig);
+
+        $sqlOps = ['like', 'ilike', 'or', 'not', 'in', 'between', 'regexp', 'similar to'];
+
+        $operatorMatch = '/^((' . implode(')|(', $sqlOps);
         $operatorMatch .= '\\x20)|<[>=]?(?![^>]+>)\\x20?|[>=!]{1,3}(?!<)\\x20?)/is';
+
         $bound = (strpos($key, '?') !== false || (is_array($value) && strpos($key, ':') !== false));
 
         if (!strpos($key, ' ')) {
@@ -671,18 +676,19 @@ class EavBehavior extends ModelBehavior {
      * @access public
      */
     function beforeFind(Model $Model, $query) {
+        
 //        Depending on the the virtualFieldType
         if ($Model->recursive < 2) {
             $Model->recursive = 2;
         }
+
         if ($this->settings[$Model->name]['type'] == 'entity') {
             if ($this->virtualFieldType == 'eav' && !empty($query['conditions'])) {
-
                 foreach ($query['conditions'] as $key => $value) {
                     $field = $this->_extractField($Model, $key, $value);
                     $attribute = ClassRegistry::init($this->attributeModel)->find('first', array(
                         'conditions' => array(
-                            'name' => $field
+                            'title' => $field
                         )
                     ));
                     if (!empty($attribute)) {
@@ -711,7 +717,7 @@ class EavBehavior extends ModelBehavior {
      * @access publics
      */
     function afterFind(\Model $Model, $results, $primary = false) {
-
+        
         if ($this->virtualFieldType == 'array' && (isset($results[0])) && (key_exists('EavAttributeKey', $results[0])) && $this->type == 'entity') {
             foreach ($results as $key => $value) {
                 foreach ($this->valueModels as $dataType => $dataModel) {
@@ -779,8 +785,8 @@ class EavBehavior extends ModelBehavior {
         $data = $model->data;
         $entityId = $data[$model->name]['id'];
         foreach ($data[$model->name] as $field => $value) {
-            if ($model->isVirtualField($field) || $this->getAttributeIdByName($field)) {
-                $attribute = ClassRegistry::init($this->attributeModel)->findByName($field);
+            if ($model->isVirtualField($field) || $this->getAttributeIdByTitle($field)) {
+                $attribute = ClassRegistry::init($this->attributeModel)->findByTitle($field);
                 $dataModel = $this->valueModels[$attribute['EavDataType']['name']];
                 $model->$dataModel->create();
                 $data = array(
@@ -818,7 +824,7 @@ class EavBehavior extends ModelBehavior {
      * @access public
      */
     function afterDelete(Model $model) {
-        
+        return true;
     }
 
 }

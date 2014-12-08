@@ -146,7 +146,7 @@ class AttributesController extends EavAppController {
     public function api_get() {
         $this->EavAttribute->recursive = -1;
 
-        $data = $this->EavAttribute->getAttributesByConditions($this->request->query);
+        $data = $this->EavAttribute->find('all', array('conditions' => $this->request->query));
 
         $this->set(array(
             'data' => $data,

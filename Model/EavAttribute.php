@@ -32,7 +32,6 @@ class EavAttribute extends EavAppModel {
 
     public $useTable = 'eav_attributes';
     public $name = 'EavAttribute';
-    protected $allowedConditions = ['EavAttribute.public', 'title', 'slug', 'id', 'description', 'input_type', 'multiple', 'optional'];
 
     /**
      * Display field
@@ -101,47 +100,5 @@ class EavAttribute extends EavAppModel {
             'foreignKey' => 'data_type_id'
         )
     );
-    public $hasMany = array(
-        'EavCategories' => array(
-            'className' => 'Eav.EavCategoryAttribute',
-            'foreignKey' => 'attribute_id',
-            'dependent' => true
-        )
-    );
-
-    /**
-     * Get list of attributes by array of conditions
-     * 
-     * Eg.:
-     * 
-     * For category with slug starting with 'curs':
-     * array('IN' => array('EavCategory.title' => array('curs')))
-     * 
-     * For categories with id 1, 6 and 9:
-     * array('EavCategory.id' => array(1,6,9))
-     * 
-     * 
-     * @param array $conditions
-     * @return array Match categories
-     */
-    public function getAttributesByConditions($conditions) {
-
-        // Prevent users to search for attributes that are not public if is not
-        // in admin prefix routing
-        $securedConditions = array(
-            "EavAttribute.public" => 1
-        );
-
-        $conditions = !(bool) Configure::read("Routing.admin") ? array_merge($conditions, $securedConditions) : $conditions;
-
-        if ((bool) Configure::read("Routing.admin") || $this->_is_conditions_allowed($this->allowedConditions, $conditions)):
-
-            $attributes = $this->find('all', array('conditions' => $conditions));
-            return $attributes ? $attributes : array();
-
-        endif;
-
-        return array();
-    }
 
 }

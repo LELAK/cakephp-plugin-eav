@@ -33,15 +33,6 @@ CroogoNav::add('sidebar', 'content.children.eav', array(
                 'controller' => 'data_types',
                 'action' => 'index'
             ),
-        ),
-        'categories' => array(
-            'title' => __d("eav", 'Categorias'),
-            'url' => array(
-                'admin' => true,
-                'plugin' => 'eav',
-                'controller' => 'categories',
-                'action' => 'index'
-            )
         )
     )
 ));

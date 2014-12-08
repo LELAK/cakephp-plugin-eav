@@ -31,10 +31,6 @@ App::uses('AppModel', 'Model');
 class EavAppModel extends AppModel {
 
     protected $assocPublicConf = array(
-        'EavCategory' => array(
-            "fields" => array('EavCategory.title', 'EavCategory.slug'),
-            "conditions" => array('EavCategory.public' => 1)
-        ),
         'EavAttributes' => array(
             "fields" => array('EavAttributes.title', 'EavAttributes.slug', 'EavAttributes.description', 'EavAttributes.input_type', 'EavAttributes.multiple', 'EavAttributes.optional'),
             "conditions" => array('EavAttributes.public' => 1)

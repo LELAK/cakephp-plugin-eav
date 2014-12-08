@@ -7,13 +7,13 @@ $this->Html
 
 if ($this->request->params['action'] == 'admin_edit') {
     $this->Html
-            ->addCrumb(__d("eav", "Tipo de Dado"), array('admin' => true, 'plugin' => 'eav', 'controller' => 'entity_types', 'action' => 'index'))
+            ->addCrumb(__d("eav", "Tipo de Entidade"), array('admin' => true, 'plugin' => 'eav', 'controller' => 'entity_types', 'action' => 'index'))
             ->addCrumb($this->request->data['EavEntityType']['name'], '#');
 }
 
 if ($this->request->params['action'] == 'admin_add') {
     $this->Html
-            ->addCrumb(__d("eav", "Tipo de Dado"), array('admin' => true, 'plugin' => 'eav', 'controller' => 'entity_types', 'action' => 'index'))
+            ->addCrumb(__d("eav", "Tipo de Entidade"), array('admin' => true, 'plugin' => 'eav', 'controller' => 'entity_types', 'action' => 'index'))
             ->addCrumb(__d("eav", 'Criar'), '/' . $this->request->url);
 }
 
@@ -22,7 +22,7 @@ $inputDefaults = $this->Form->inputDefaults();
 $inputClass = isset($inputDefaults['class']) ? $inputDefaults['class'] : null;
 
 $this->append('tab-heading');
-echo $this->Croogo->adminTab(__d("eav", "Tipo de Dado"), '#entity-type-basic');
+echo $this->Croogo->adminTab(__d("eav", "Tipo de Entidade"), '#entity-type-basic');
 echo $this->Croogo->adminTabs();
 $this->end();
 

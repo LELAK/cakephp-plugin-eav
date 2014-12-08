@@ -1,7 +1,5 @@
 <?php
 
-Router::mapResources('Eav.Categories');
-
 // Route the api path
 Router::connect('/api/:apiVersion/eav/:controller/:action/*', array(
     'prefix' => 'api',
