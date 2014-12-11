@@ -73,10 +73,10 @@ class AttributesController extends EavAppController {
         if ($this->request->is('post')) {
             $this->EavAttribute->create();
             if ($this->EavAttribute->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav', 'Atributo salvo'));
+                $this->smartFlash(sprintf(__d("eav", "Atributo %s"), __d("eav", "salvo")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav', 'O atributo não pode ser salvo, tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O atributo não pode ser %s, tente novamente."), __d("eav", "salvo")), 'danger');
             }
         }
 
@@ -101,10 +101,10 @@ class AttributesController extends EavAppController {
         }
         if ($this->request->isPost() || $this->request->isPut()) {
             if ($this->EavAttribute->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav', 'O atributo foi salvo'));
+                $this->smartFlash(sprintf(__d("eav", "Atributo %s"), __d("eav", "editado")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav', 'O atributo não pode ser salvo, tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O atributo não pode ser %s, tente novamente."), __d("eav", "editado")), 'danger');
             }
         } else {
             $this->request->data = $this->EavAttribute->read(null, $id);
@@ -133,10 +133,10 @@ class AttributesController extends EavAppController {
             throw new NotFoundException(__d('eav', 'Atributo inválido'));
         }
         if ($this->EavAttribute->delete()) {
-            $this->Session->setFlash(__d('eav', 'Atributo excluído'));
+            $this->smartFlash(sprintf(__d("eav", "Atributo %s"), __d("eav", "excluído")), 'success');
             $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__d('eav', 'O atributo não pode ser excluído. Tente novamente'));
+        $this->smartFlash(sprintf(__d("eav", "O atributo não pode ser %s, tente novamente."), __d("eav", "excluído")), 'danger');
         $this->redirect(array('action' => 'index'));
     }
 

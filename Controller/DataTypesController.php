@@ -51,7 +51,7 @@ class DataTypesController extends EavAppController {
     public function admin_view($id = null) {
         $this->EavDataType->id = $id;
         if (!$this->EavDataType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de dado inválido'));
         }
         $this->set('dataType', $this->EavDataType->read(null, $id));
     }
@@ -65,13 +65,13 @@ class DataTypesController extends EavAppController {
         if ($this->request->is('post')) {
             $this->EavDataType->create();
             if ($this->EavDataType->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav','O tipo de dado foi salvo'));
+                $this->smartFlash(sprintf(__d("eav", "Tipo de dado %s"), __d("eav", "salvo")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav','O tipo de dado não pode ser salvo. Tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O tipo de dado não pode ser %s. Tente novamente."), __d("eav", "salvo")), 'danger');
             }
         }
-        
+
         $this->render('admin_form');
     }
 
@@ -84,19 +84,19 @@ class DataTypesController extends EavAppController {
     public function admin_edit($id = null) {
         $this->EavDataType->id = $id;
         if (!$this->EavDataType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de dado inválido'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->EavDataType->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav','O tipo de dado foi salvo'));
+                $this->smartFlash(sprintf(__d("eav", "Tipo de dado %s"), __d("eav", "editado")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav','O tipo de dado não pode ser salvo. Tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O tipo de dado não pode ser %s. Tente novamente."), __d("eav", "editado")), 'danger');
             }
         } else {
             $this->request->data = $this->EavDataType->read(null, $id);
         }
-        
+
         $this->render('admin_form');
     }
 
@@ -112,13 +112,13 @@ class DataTypesController extends EavAppController {
         }
         $this->EavDataType->id = $id;
         if (!$this->EavDataType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de dado inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de dado inválido'));
         }
         if ($this->EavDataType->delete()) {
-            $this->Session->setFlash(__d('eav','Tipo de dado excluído'));
+            $this->smartFlash(sprintf(__d("eav", "Tipo de dado %s"), __d("eav", "excluído")), 'success');
             $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__d('eav','Tipo de dado não pode ser deletado. Tente novamente'));
+        $this->smartFlash(sprintf(__d("eav", "O tipo de dado não pode ser %s. Tente novamente."), __d("eav", "excluído")), 'danger');
         $this->redirect(array('action' => 'index'));
     }
 

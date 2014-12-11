@@ -59,4 +59,8 @@ class EavAppController extends AppController {
         return $this->request->prefix === "api";
     }
 
+    protected function smartFlash($message, $format) {
+        $this->Session->setFlash($message, 'flash', array('alert' => $format));
+    }
+
 }

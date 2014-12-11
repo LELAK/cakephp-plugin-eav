@@ -50,7 +50,7 @@ class EntityTypesController extends EavAppController {
     public function admin_view($id = null) {
         $this->EavEntityType->id = $id;
         if (!$this->EavEntityType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de entidade inválido'));
         }
         $this->set('entityType', $this->EavEntityType->read(null, $id));
     }
@@ -64,10 +64,10 @@ class EntityTypesController extends EavAppController {
         if ($this->request->is('post')) {
             $this->EavEntityType->create();
             if ($this->EavEntityType->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav','Tipo de entidade salvo com sucesso'));
+                $this->smartFlash(sprintf(__d("eav", "Tipo de entidade %s"), __d("eav", "salvo")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav','O tipo de entidade não pode ser salvo. Tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O tipo de entidade não pode ser %s. Tente novamente."), __d("eav", "salvo")), 'danger');
             }
         }
         $this->render('admin_form');
@@ -82,14 +82,14 @@ class EntityTypesController extends EavAppController {
     public function admin_edit($id = null) {
         $this->EavEntityType->id = $id;
         if (!$this->EavEntityType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de entidade inválido'));
         }
         if ($this->request->is('post') || $this->request->is('put')) {
             if ($this->EavEntityType->save($this->request->data)) {
-                $this->Session->setFlash(__d('eav','Tipo de entidade salvo com sucesso'));
+                $this->smartFlash(sprintf(__d("eav", "Tipo de entidade %s"), __d("eav", "editado")), 'success');
                 $this->redirect(array('action' => 'index'));
             } else {
-                $this->Session->setFlash(__d('eav','Tipo de entidade não pode ser salvo. Tente novamente'));
+                $this->smartFlash(sprintf(__d("eav", "O tipo de entidade não pode ser %s. Tente novamente."), __d("eav", "editado")), 'danger');
             }
         } else {
             $this->request->data = $this->EavEntityType->read(null, $id);
@@ -109,13 +109,13 @@ class EntityTypesController extends EavAppController {
         }
         $this->EavEntityType->id = $id;
         if (!$this->EavEntityType->exists()) {
-            throw new NotFoundException(__d('eav','Tipo de entidade inválido'));
+            throw new NotFoundException(__d('eav', 'Tipo de entidade inválido'));
         }
         if ($this->EavEntityType->delete()) {
-            $this->Session->setFlash(__d('eav','Tipo de entidade deletado'));
+            $this->smartFlash(sprintf(__d("eav", "Tipo de entidade %s"), __d("eav", "excluído")), 'success');
             $this->redirect(array('action' => 'index'));
         }
-        $this->Session->setFlash(__d('eav','Tipo de entidade não pode ser deletado. Tente novamente'));
+        $this->smartFlash(sprintf(__d("eav", "O tipo de entidade não pode ser %s. Tente novamente."), __d("eav", "excluído")), 'danger');
         $this->redirect(array('action' => 'index'));
     }
 
