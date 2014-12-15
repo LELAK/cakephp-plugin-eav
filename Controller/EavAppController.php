@@ -19,7 +19,7 @@
  * @package       plugins.Eav.Controller
  * @license       MIT License (http://www.opensource.org/licenses/mit-license.php)
  */
-App::uses('AppController', 'Controller');
+App::uses('MilkartAppController', 'Milkart.Controller');
 
 /**
  * Eav App Controller
@@ -29,7 +29,7 @@ App::uses('AppController', 'Controller');
  *
  * @package       plugins.Eav.Controller
  */
-class EavAppController extends AppController {
+class EavAppController extends MilkartAppController {
 
     public function beforeFilter() {
 

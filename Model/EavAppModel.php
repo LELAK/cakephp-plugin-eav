@@ -1,6 +1,6 @@
 <?php
 
-App::uses('AppModel', 'Model');
+App::uses('MilkartAppModel', 'Milkart.Model');
 /**
  * Eav App Model
  *
@@ -28,7 +28,7 @@ App::uses('AppModel', 'Model');
  * @package       plugins.Eav.Model
  *
  */
-class EavAppModel extends AppModel {
+class EavAppModel extends MilkartAppModel {
 
     protected $assocPublicConf = array(
         'EavAttributes' => array(
