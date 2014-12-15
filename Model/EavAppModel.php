@@ -47,6 +47,7 @@ class EavAppModel extends MilkartAppModel {
      * if the requests are not in the /admin/ prefix.
      */
     public function beforeFind($query = array()) {
+
         // If the request is not in admin prefix. Load only public fields.
         if (!(bool) CakeSession::read("Routing.admin")):
             if (isset($this->assocPublicConf[$this->alias])):

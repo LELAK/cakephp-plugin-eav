@@ -31,36 +31,4 @@ App::uses('MilkartAppController', 'Milkart.Controller');
  */
 class EavAppController extends MilkartAppController {
 
-    public function beforeFilter() {
-
-        parent::beforeFilter();
-
-        // Define if request are in /admin/
-        if ($this->request->prefix !== 'api'):
-            CakeSession::write('Routing.admin', !empty($this->request->params['admin']));
-        elseif (!CakeSession::check("Routing.admin")):
-            CakeSession::write('Routing.admin', false);
-        endif;
-
-        // As our form is dynamic. We need to disable form security component
-        $this->Security->validatePost = false;
-
-        // Check if API version exists for current controller
-        $this->checkApíVersion();
-    }
-
-    protected function checkApíVersion() {
-        if ($this->isApi() && !in_array($this->request->params['apiVersion'], $this->apiVersions)):
-            throw new Exception(__d("eav", "Versão de API inválida"));
-        endif;
-    }
-
-    protected function isApi() {
-        return $this->request->prefix === "api";
-    }
-
-    protected function smartFlash($message, $format) {
-        $this->Session->setFlash($message, 'flash', array('alert' => $format));
-    }
-
 }
